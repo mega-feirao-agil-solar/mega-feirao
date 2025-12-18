@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mega Feirão da Ágil Solar</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Configurações Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            orange: {
+              500: '#f97316',
+              600: '#ea580c',
+            },
+            yellow: {
+              400: '#facc15',
+              500: '#eab308',
+            }
+          },
+          animation: {
+            'spin-slow': 'spin 3s linear infinite',
+            'fade-in-down': 'fadeInDown 0.5s ease-out',
+            'fade-in-up': 'fadeInUp 0.5s ease-out',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            fadeInDown: {
+              '0%': { opacity: '0', transform: 'translateY(-10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #050505;
+      color: #e5e5e5;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #171717;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #404040;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f97316;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="selection:bg-orange-500 selection:text-white overflow-x-hidden">
+
+<!-- SPLASH SCREEN -->
+<div id="splash-screen" class="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center overflow-hidden transition-opacity duration-1000 ease-in-out">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-900/20 via-black to-black animate-pulse"></div>
+
+  <div class="relative z-10 flex flex-col items-center transition-transform duration-1000" id="splash-content">
+
+    <!-- Logo Grande 3D (Splash) -->
+    <div class="relative mb-4 group">
+      <div class="absolute inset-0 bg-orange-600 blur-[80px] opacity-30 animate-pulse"></div>
+      <!-- IMAGEM DO BOTÃO 3D AQUI -->
+      <img src="logo.png" alt="Mega Feirão Ágil Solar" class="relative w-64 md:w-80 h-auto object-contain drop-shadow-[0_0_25px_rgba(249,115,22,0.5)] animate-pulse-slow">
+    </div>
+
+    <!-- TÍTULO RESTAURADO (Corrigido corte do degradê com pb-2 pr-2) -->
+    <h1 class="text-4xl md:text-5xl font-black text-white italic tracking-tighter mb-1 scale-y-110 text-center px-4 leading-tight">
+      MEGA FEIRÃO <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400 whitespace-nowrap pb-2 pr-2">DA ÁGIL SOLAR</span>
+    </h1>
+
+    <div class="flex flex-col items-center gap-3 w-64 mt-8">
+      <div class="flex justify-between w-full text-[10px] font-black uppercase text-neutral-600 tracking-widest">
+        <span>System Check</span>
+        <span id="loading-percentage" class="text-orange-500">0%</span>
+      </div>
+      <div class="w-full h-1.5 bg-neutral-900 rounded-none overflow-hidden border border-neutral-800">
+        <div id="loading-bar" class="h-full bg-gradient-to-r from-orange-600 to-yellow-400 transition-all duration-200 ease-out shadow-[0_0_10px_rgba(234,88,12,0.5)]" style="width: 0%"></div>
+      </div>
+      <p class="text-[10px] font-mono text-neutral-700 mt-2 animate-pulse">CARREGANDO OFERTAS...</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP CONTENT -->
+<div id="app-content" class="opacity-0 scale-95 transition-all duration-1000">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-neutral-800 shadow-[0_10px_30px_-10px_rgba(0,0,0,1)] animate-fade-in-down">
+    <div class="bg-gradient-to-r from-orange-600 to-yellow-500 h-1 w-full"></div>
+    <div class="max-w-7xl mx-auto px-4 py-3"> <!-- Padding reduzido para a logo se ajustar -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+
+        <!-- Logo Header -->
+        <div class="flex items-center gap-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+          <!-- IMAGEM DO BOTÃO 3D AQUI -->
+          <img src="logo.png" alt="Mega Feirão Ágil Solar" class="h-14 md:h-16 w-auto object-contain hover:scale-105 transition-transform drop-shadow-[0_0_10px_rgba(249,115,22,0.3)]">
+
+          <!-- TÍTULO HEADER RESTAURADO (Corrigido corte do degradê com pb-1 pr-1) -->
+          <div>
+            <h1 class="text-xl md:text-2xl font-black text-white italic tracking-tighter leading-none transition-colors">
+              MEGA FEIRÃO <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400 group-hover:text-white group-hover:bg-none pb-1 pr-1 inline-block">DA ÁGIL SOLAR</span>
+            </h1>
+            <p class="text-neutral-500 text-[10px] font-black uppercase tracking-[0.3em]">Tabela de Vendas</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap items-center gap-4">
+          <nav class="flex bg-neutral-900/50 p-1 border border-neutral-800" id="tab-container">
+            <!-- Tabs injected via JS -->
+          </nav>
+
+          <button id="admin-toggle-btn" class="p-3 border transition-all duration-300 bg-black border-neutral-800 text-neutral-500 hover:text-white hover:border-white" title="Modo ADMIN">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-8 relative animate-fade-in-up">
+
+    <!-- Admin Bar (Hidden by default) -->
+    <div id="admin-bar" class="hidden mb-8 bg-red-900/10 border-2 border-red-600/30 p-4 flex items-center justify-between animate-fade-in-down backdrop-blur-sm">
+      <div class="flex items-center gap-3">
+        <div class="bg-red-600 p-2 text-white">
+          <i data-lucide="settings" class="w-5 h-5 animate-spin-slow"></i>
+        </div>
+        <div>
+          <span class="text-red-500 font-black uppercase tracking-widest block text-xs">Atenção</span>
+          <span class="text-white font-bold text-sm">MODO ADMINISTRADOR ATIVO</span>
+        </div>
+      </div>
+      <button onclick="openModal()" class="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-yellow-500 hover:from-orange-500 hover:to-yellow-400 text-black px-6 py-3 font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(234,88,12,0.2)] hover:shadow-[0_0_30px_rgba(234,88,12,0.4)] active:scale-95">
+        <i data-lucide="plus" class="w-5 h-5 stroke-[3px]"></i>
+        ADICIONAR ITEM
+      </button>
+    </div>
+
+    <!-- Search & View Toggle -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-10">
+      <div class="relative flex-1 group">
+        <div class="absolute inset-0 bg-orange-500/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-600 group-focus-within:text-orange-500 transition-colors"></i>
+        <input type="text" id="search-input" placeholder="BUSCAR PRODUTO..." class="relative w-full pl-12 pr-4 py-4 bg-neutral-900 border-2 border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-orange-500 focus:bg-black transition-all font-bold uppercase tracking-wide">
+      </div>
+
+      <div class="flex bg-neutral-900 p-1 border border-neutral-800 shrink-0">
+        <button onclick="setViewMode('grid')" id="btn-grid" class="p-3 transition-all bg-gradient-to-r from-orange-600 to-yellow-500 text-black">
+          <i data-lucide="grid" class="w-6 h-6"></i>
+        </button>
+        <button onclick="setViewMode('list')" id="btn-list" class="p-3 transition-all text-neutral-600 hover:text-white">
+          <i data-lucide="list" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Products Container -->
+    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <!-- Products injected via JS -->
+    </div>
+
+    <!-- Empty State (Hidden by default) -->
+    <div id="empty-state" class="hidden text-center py-32 border-2 border-dashed border-neutral-800 bg-neutral-900/20">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-neutral-900 mb-6 text-neutral-700 border border-neutral-800">
+        <i data-lucide="search" class="w-10 h-10"></i>
+      </div>
+      <p class="text-neutral-500 font-bold uppercase tracking-widest mb-4">Nenhum resultado encontrado</p>
+      <button onclick="openModal()" id="empty-state-btn" class="hidden text-orange-500 font-black hover:text-white hover:underline uppercase tracking-wide">
+        + CRIAR NOVO ITEM
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL FORM -->
+<div id="modal-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 hidden">
+  <div class="bg-neutral-900 border-2 border-orange-600/50 rounded-none w-full max-w-lg shadow-[0_0_50px_rgba(234,88,12,0.2)] animate-fade-in-up">
+    <div class="flex justify-between items-center p-6 border-b border-neutral-800 bg-black/50">
+      <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400 flex items-center gap-2 italic tracking-tighter uppercase">
+        <i data-lucide="edit-2" class="w-6 h-6 text-orange-500" id="modal-icon"></i>
+        <span id="modal-title">NOVA OFERTA</span>
+      </h2>
+      <button onclick="closeModal()" class="text-neutral-500 hover:text-red-500 transition-colors">
+        <i data-lucide="x" class="w-8 h-8"></i>
+      </button>
+    </div>
+
+    <form id="product-form" class="p-6 space-y-5">
+      <input type="hidden" id="form-id">
+
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-1">
+          <label class="text-[10px] text-orange-500/80 font-black uppercase tracking-widest">Produto</label>
+          <input required id="form-name" class="w-full bg-black border border-neutral-700 focus:border-orange-500 rounded-none px-4 py-3 text-white placeholder-neutral-700 font-bold uppercase transition-all" placeholder="NOME DO KIT">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] text-orange-500/80 font-black uppercase tracking-widest">Marca</label>
+          <input required id="form-brand" class="w-full bg-black border border-neutral-700 focus:border-orange-500 rounded-none px-4 py-3 text-white placeholder-neutral-700 font-bold uppercase transition-all" placeholder="FABRICANTE">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] text-orange-500/80 font-black uppercase tracking-widest">Potência</label>
+          <input required type="number" step="0.01" id="form-power" class="w-full bg-black border border-neutral-700 focus:border-orange-500 rounded-none px-4 py-3 text-white font-mono font-bold">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] text-green-500/80 font-black uppercase tracking-widest">Preço Venda</label>
+          <input required type="number" id="form-price" class="w-full bg-black border border-green-900 focus:border-green-500 text-green-400 rounded-none px-4 py-3 font-mono font-bold">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] text-red-500/80 font-black uppercase tracking-widest">Preço Lista</label>
+          <input required type="number" id="form-listPrice" class="w-full bg-black border border-red-900 focus:border-red-500 text-red-400 rounded-none px-4 py-3 font-mono font-bold">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] text-orange-500/80 font-black uppercase tracking-widest">Tipo</label>
+          <select id="form-type" class="w-full bg-black border border-neutral-700 focus:border-orange-500 rounded-none px-4 py-3 text-white font-bold uppercase">
+            <option>Monofásico</option>
+            <option>Bifásico</option>
+            <option>Trifásico</option>
+          </select>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] text-orange-500/80 font-black uppercase tracking-widest">Tag</label>
+          <select id="form-tag" class="w-full bg-black border border-neutral-700 focus:border-orange-500 rounded-none px-4 py-3 text-white font-bold uppercase">
+            <option>MAIS VENDIDO</option>
+            <option>PREMIUM</option>
+            <option>CUSTO-BENEFÍCIO</option>
+            <option>LANÇAMENTO</option>
+            <option>ALTA POTÊNCIA</option>
+            <option>PROJETO ESPECIAL</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-4 flex gap-4">
+        <button type="button" onclick="closeModal()" class="flex-1 py-4 bg-neutral-800 hover:bg-neutral-700 text-white font-black uppercase tracking-widest transition-colors border-b-4 border-neutral-950 active:border-b-0 active:translate-y-1">Cancelar</button>
+        <button type="submit" class="flex-1 py-4 bg-gradient-to-r from-orange-600 to-yellow-500 hover:from-orange-500 hover:to-yellow-400 text-black font-black uppercase tracking-widest transition-all border-b-4 border-orange-800 active:border-b-0 active:translate-y-1 shadow-[0_0_20px_rgba(234,88,12,0.4)]">SALVAR OFERTA</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="fixed bottom-10 right-10 bg-gradient-to-r from-orange-600 to-yellow-500 text-black px-8 py-5 shadow-[0_0_50px_rgba(234,88,12,0.5)] flex items-center gap-4 border-4 border-orange-400 transform translate-y-full opacity-0 transition-all duration-300 z-[9999]" style="pointer-events: none;">
+  <div class="bg-black p-1">
+    <i data-lucide="check" class="w-6 h-6 text-orange-500 stroke-[4px]"></i>
+  </div>
+  <span id="toast-msg" class="font-black uppercase tracking-wider text-sm">NOTIFICAÇÃO</span>
+</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+  // --- DATA & STATE ---
+  const INITIAL_DATA = {
+    kitsInversor: [
+      { id: 'k1', name: 'KIT 2.925 KWP', brand: 'ODEX / SOFAR', power: 2.925, price: 8397, listPrice: 9800, type: 'Monofásico', description: '5x Painéis 585W, Inversor 3,3kW', tag: 'MAIS VENDIDO' },
+      { id: 'k2', name: 'KIT 3.51 KWP', brand: 'ODEX / SOFAR', power: 3.51, price: 9397, listPrice: 10800, type: 'Monofásico', description: '6x Painéis 585W, Inversor 3,3kW', tag: 'MAIS VENDIDO' },
+      { id: 'k3', name: 'KIT 4.095 KWP', brand: 'ODEX / SOFAR', power: 4.095, price: 10397, listPrice: 11850, type: 'Monofásico', description: '7x Painéis 585W, Inversor 3,3kW', tag: 'MAIS VENDIDO' },
+      { id: 'k4', name: 'KIT 4.68 KWP', brand: 'ODEX / SOFAR', power: 4.68, price: 11097, listPrice: 12750, type: 'Monofásico', description: '8x Painéis 585W, Inversor 3,3kW', tag: 'MAIS VENDIDO' },
+      { id: 'k5', name: 'KIT 5.265 KWP', brand: 'ODEX / SOFAR', power: 5.265, price: 12897, listPrice: 14750, type: 'Monofásico', description: '9x Painéis 585W, Inversor 4kW', tag: 'MAIS VENDIDO'},
+      { id: 'k6', name: 'KIT 5.85 KWP', brand: 'ODEX / SOFAR', power: 5.85, price: 13897, listPrice: 16050, type: 'Monofásico', description: '10x Painéis 585W, Inversor 5kW', tag: 'MAIS VENDIDO'},
+      { id: 'k7', name: 'KIT 6.435 KWP', brand: 'ODEX / SOFAR', power: 6.435, price: 14797, listPrice: 17450, type: 'Monofásico', description: '11x Painéis 585W, Inversor 5kW', tag: 'MAIS VENDIDO'},
+      { id: 'k8', name: 'KIT 7.02 KWP', brand: 'ODEX / SOFAR', power: 7.02, price: 15797, listPrice: 18400, type: 'Monofásico', description: '12x Painéis 585W, Inversor 5kW', tag: 'MAIS VENDIDO' },
+      { id: 'k9', name: 'KIT 7.605 KWP', brand: 'ODEX / SOFAR', power: 7.605, price: 17297, listPrice: 19660, type: 'Monofásico', description: '13x Painéis 585W, Inversor 5kW', tag: 'MAIS VENDIDO' },
+      { id: 'k10', name: 'KIT 8.19 KWP', brand: 'ODEX / SOFAR', power: 8.19, price: 18297, listPrice: 20750, type: 'Monofásico', description: '14x Painéis 585W, Inversor 6kW', tag: 'MAIS VENDIDO' },
+      { id: 'k11', name: 'KIT 8.775 KWP', brand: 'ODEX / SOFAR', power: 8.775, price: 19197, listPrice: 22000, type: 'Monofásico', description: '15x Painéis 585W, Inversor 6kW', tag: 'MAIS VENDIDO' },
+      { id: 'k12', name: 'KIT 9.36 KWP', brand: 'ODEX / SOFAR', power: 9.36, price: 20197, listPrice: 23950, type: 'Monofásico', description: '16x Painéis 585W, Inversor 6kW', tag: 'MAIS VENDIDO' },
+      { id: 'k13', name: 'KIT 9.945 KWP', brand: 'ODEX / SOFAR', power: 9.945, price: 22197, listPrice: 25250, type: 'Monofásico', description: '17x Painéis 585W, Inversor 6kW', tag: 'MAIS VENDIDO' },
+      { id: 'k14', name: 'KIT 10.53 KWP', brand: 'ODEX / SOFAR', power: 10.53, price: 23197, listPrice: 26650, type: 'Monofásico', description: '18x Painéis 585W, Inversor 7,5kW', tag: 'MAIS VENDIDO' },
+      { id: 'k15', name: 'KIT 11.115 KWP', brand: 'ODEX / SOFAR', power: 11.115, price: 24697, listPrice: 28030, type: 'Monofásico', description: '19x Painéis 585W, Inversor 7,5kW', tag: 'MAIS VENDIDO' },
+      { id: 'k16', name: 'KIT 11.7 KWP', brand: 'ODEX / SOFAR', power: 11.7, price: 26197, listPrice: 29497, type: 'Monofásico', description: '20x Painéis 585W, Inversor 8kW', tag: 'ALTA POTÊNCIA' },
+    ],
+    kitsMicro: [
+      {
+        id: 'm4',
+        name: 'KIT 2.44 KWP MICRO',
+        brand: 'ODEX / GROWATT NEO',
+        power: 2.44,
+        price: 8097,
+        listPrice: 9120,
+        type: 'Monofásico',
+        description: '4x Painéis 610W, 1x Microinversor Growatt NEO 2250',
+        tag: 'ALTA PERFORMANCE'
+      },
+
+      {
+        id: 'm5',
+        name: 'KIT 2.34 KWP MICRO',
+        brand: 'ODEX / GROWATT NEO',
+        power: 2.34,
+        price: 7047,
+        listPrice: 8210,
+        type: 'Monofásico',
+        description: '4x Painéis 585W, 1x Microinversor Growatt NEO 2250',
+        tag: 'ALTA PERFORMANCE'
+      },
+
+      {
+        id: 'm6',
+        name: 'KIT 4.88 KWP MICRO',
+        brand: 'ODEX / GROWATT NEO',
+        power: 4.88,
+        price: 13847,
+        listPrice: 16400,
+        type: 'Monofásico',
+        description: '8x Painéis Bifaciais 610W, 2x Microinversor Growatt NEO 2250',
+        tag: 'ALTA PERFORMANCE'
+      },
+
+      {
+        id: 'm7',
+        name: 'KIT 4.68 KWP MICRO',
+        brand: 'ODEX / GROWATT NEO',
+        power: 4.68,
+        price: 11847,
+        listPrice: 14080,
+        type: 'Monofásico',
+        description: '8x Painéis 585W, 2x Microinversor Growatt NEO 2250',
+        tag: 'ALTA PERFORMANCE'
+      },
+
+      {
+        id: 'm8',
+        name: 'KIT 7.32 KWP MICRO',
+        brand: 'HUASUN / GROWATT NEO',
+        power: 7.32,
+        price: 20847,
+        listPrice: 23590,
+        type: 'Monofásico',
+        description: '12x Painéis Bifaciais 610W, 3x Microinversor Growatt NEO 2250',
+        tag: 'ALTA PERFORMANCE'
+      },
+
+      {
+        id: 'm9',
+        name: 'KIT 7.02 KWP MICRO',
+        brand: 'ODEX / GROWATT NEO',
+        power: 7.02,
+        price: 17847,
+        listPrice: 20550,
+        type: 'Monofásico',
+        description: '12x Painéis 585W, 3x Microinversor Growatt NEO 2250',
+        tag: 'ALTA PERFORMANCE'
+      },
+    ]
+  };
+
+  const TABS = [
+    { id: 'kitsInversor', label: 'KITS COM INVERSOR', icon: 'sun' },
+    { id: 'kitsMicro', label: 'KITS COM MICRO', icon: 'cpu' },
+  ];
+
+  let state = {
+    data: JSON.parse(localStorage.getItem('solarData')) || INITIAL_DATA,
+    activeTab: 'kitsInversor',
+    searchTerm: '',
+    viewMode: 'grid',
+    isEditMode: false
+  };
+
+  // --- UTILS ---
+  function formatCurrency(val) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+  }
+
+  function saveToLocalStorage() {
+    localStorage.setItem('solarData', JSON.stringify(state.data));
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').innerText = msg;
+    toast.classList.remove('translate-y-full', 'opacity-0');
+    setTimeout(() => {
+      toast.classList.add('translate-y-full', 'opacity-0');
+    }, 3000);
+  }
+
+  // --- SPLASH SCREEN ---
+  function initSplash() {
+    let progress = 0;
+    const percentageEl = document.getElementById('loading-percentage');
+    const barEl = document.getElementById('loading-bar');
+
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 15) + 5;
+      if(progress > 100) progress = 100;
+
+      percentageEl.innerText = `${progress}%`;
+      barEl.style.width = `${progress}%`;
+
+      if (progress === 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          document.getElementById('splash-screen').classList.add('opacity-0', 'pointer-events-none');
+          document.getElementById('splash-content').classList.add('scale-110');
+          document.getElementById('app-content').classList.remove('opacity-0', 'scale-95');
+          document.getElementById('app-content').classList.add('opacity-100', 'scale-100');
+        }, 500);
+        // Remove do DOM dps
+        setTimeout(() => document.getElementById('splash-screen').remove(), 2000);
+      }
+    }, 150);
+  }
+
+  // --- RENDER FUNCTIONS ---
+  function getBadgeStyles(tag) {
+    const styles = {
+      'MAIS VENDIDO': 'bg-gradient-to-r from-orange-600 to-yellow-500 text-black border-orange-500',
+      'PREMIUM': 'bg-neutral-800 text-orange-400 border-orange-500',
+      'CUSTO-BENEFÍCIO': 'bg-green-600 text-white border-green-500',
+      'LANÇAMENTO': 'bg-blue-600 text-white border-blue-500',
+      'ALTA POTÊNCIA': 'bg-red-600 text-white border-red-500',
+      'PROJETO ESPECIAL': 'bg-neutral-700 text-neutral-300 border-neutral-600',
+    };
+    return styles[tag] || styles['PROJETO ESPECIAL'];
+  }
+
+  function renderTabs() {
+    const container = document.getElementById('tab-container');
+    container.innerHTML = TABS.map(tab => {
+      const isActive = state.activeTab === tab.id;
+      const activeClasses = 'bg-gradient-to-r from-orange-600 to-yellow-500 border-orange-500 text-black shadow-[0_0_15px_rgba(234,88,12,0.3)] translate-y-[-2px]';
+      const inactiveClasses = 'bg-transparent border-transparent text-neutral-500 hover:text-white hover:border-neutral-700';
+
+      return `
+                    <button onclick="setTab('${tab.id}')" class="flex items-center gap-2 px-6 py-3 text-xs font-black uppercase tracking-wider transition-all duration-200 border ${isActive ? activeClasses : inactiveClasses}">
+                        <i data-lucide="${tab.icon}" class="w-4 h-4 ${isActive ? 'stroke-[3px]' : ''}"></i>
+                        ${tab.label}
+                    </button>
+                `;
+    }).join('');
+    lucide.createIcons();
+  }
+
+  function renderProducts() {
+    const container = document.getElementById('products-container');
+
+    // Filter Data
+    let list = state.data[state.activeTab] || [];
+    if (state.searchTerm) {
+      const lower = state.searchTerm.toLowerCase();
+      list = list.filter(item =>
+              item.name.toLowerCase().includes(lower) ||
+              item.brand.toLowerCase().includes(lower)
+      );
+    }
+
+    // Empty State
+    const emptyState = document.getElementById('empty-state');
+    const emptyBtn = document.getElementById('empty-state-btn');
+
+    if (list.length === 0) {
+      container.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      state.isEditMode ? emptyBtn.classList.remove('hidden') : emptyBtn.classList.add('hidden');
+      return;
+    } else {
+      emptyState.classList.add('hidden');
+    }
+
+    // Render Grid or List
+    container.className = state.viewMode === 'grid'
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            : "flex flex-col gap-4 bg-neutral-900/50 border border-neutral-800 rounded-none";
+
+    container.innerHTML = list.map(item => {
+      const discount = Math.round(((item.listPrice - item.price) / item.listPrice) * 100);
+      const badgeClass = getBadgeStyles(item.tag);
+      const formattedPrice = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(item.price);
+      const formattedListPrice = formatCurrency(item.listPrice);
+
+      if (state.viewMode === 'grid') {
+        // CARD VIEW
+        return `
+                    <div class="relative group flex flex-col overflow-hidden transition-all duration-300 bg-neutral-900 border-2 ${state.isEditMode ? 'border-dashed border-orange-500/50' : 'border-neutral-800 hover:border-orange-500'} hover:shadow-[0_0_30px_rgba(249,115,22,0.15)] hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-orange-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+
+                        ${state.isEditMode ? `
+                        <div class="absolute top-0 right-0 p-2 z-20 flex gap-1 bg-black/80 backdrop-blur border-b border-l border-neutral-700">
+                            <button onclick='openModal(${JSON.stringify(item)})' class="p-1.5 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white transition-colors"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="deleteItem('${item.id}')" class="p-1.5 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>` : ''}
+
+                        <div class="absolute -left-1 top-4 z-10">
+                            <div class="bg-red-600 text-white text-xs font-black px-3 py-1 shadow-lg flex items-center gap-1 skew-x-[-10deg] border-2 border-red-800">
+                                <span class="skew-x-[10deg]">-${discount}% OFF</span>
+                            </div>
+                        </div>
+
+                        <div class="p-6 relative z-10 flex flex-col h-full">
+                            <div class="flex justify-end mb-4">
+                                <span class="px-2 py-0.5 rounded-none skew-x-[-10deg] text-[10px] font-black uppercase tracking-tighter border-l-4 shadow-[0_0_10px_rgba(0,0,0,0.5)] ${badgeClass}">
+                                    <span class="skew-x-[10deg] inline-block">${item.tag}</span>
+                                </span>
+                            </div>
+
+                            <div class="mb-1">
+                                <span class="text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em]">${item.brand}</span>
+                            </div>
+                            <h3 class="text-white font-black text-xl leading-none uppercase tracking-tight mb-4 group-hover:text-orange-400 transition-colors">${item.name}</h3>
+
+                            <div class="bg-black/50 border border-neutral-800 p-3 mb-6 grid grid-cols-2 gap-2">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-neutral-500 font-bold uppercase">Potência</span>
+                                    <span class="text-orange-500 font-black text-lg flex items-center gap-1"><i data-lucide="zap" class="w-4 h-4 fill-orange-500"></i> ${item.power} <span class="text-xs">kWp</span></span>
+                                </div>
+                                <div class="flex flex-col border-l border-neutral-800 pl-3">
+                                    <span class="text-[10px] text-neutral-500 font-bold uppercase">Tipo</span>
+                                    <span class="text-neutral-300 font-bold text-sm uppercase mt-1 truncate">${item.type}</span>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-neutral-400 mb-6 font-medium leading-relaxed uppercase border-t border-neutral-800 pt-3 flex-1">${item.description}</p>
+
+                            <div class="mt-auto pt-4 border-t-2 border-dashed border-neutral-800 group-hover:border-orange-500/30 transition-colors">
+                                <div class="flex flex-col mb-1">
+                                    <span class="text-xs text-neutral-500 line-through font-bold decoration-red-500 decoration-2">DE: ${formattedListPrice}</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2">
+                                    <div>
+                                        <span class="text-[10px] text-orange-500 font-black uppercase tracking-wider block mb-[-4px]">À VISTA</span>
+                                        <div class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400 tracking-tighter">
+                                            <span class="text-base align-top text-neutral-500 mr-0.5">R$</span>${formattedPrice}<span class="text-lg align-top text-neutral-500">,00</span>
+                                        </div>
+                                    </div>
+
+                                    ${!state.isEditMode ? `
+                                    <button onclick='copyToClipboard(${JSON.stringify(item)})' class="bg-gradient-to-r from-orange-600 to-yellow-500 hover:from-orange-500 hover:to-yellow-400 text-black p-3 shadow-[0_0_15px_rgba(234,88,12,0.4)] hover:shadow-[0_0_25px_rgba(234,88,12,0.6)] transition-all active:scale-95 group/btn border-2 border-orange-400" title="GERAR PROPOSTA">
+                                        <i data-lucide="copy" class="w-6 h-6 stroke-[3px]"></i>
+                                    </button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+      } else {
+        // LIST VIEW
+        return `
+                    <div class="relative flex flex-col sm:flex-row sm:items-center p-5 gap-4 group bg-neutral-900 border-b border-neutral-800 hover:bg-neutral-800/50 hover:border-l-4 hover:border-l-orange-500 transition-all ${state.isEditMode ? 'border-dashed border-orange-500/30' : ''}">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <span class="px-2 py-0.5 rounded-none skew-x-[-10deg] text-[10px] font-black uppercase tracking-tighter border-l-4 shadow-[0_0_10px_rgba(0,0,0,0.5)] ${badgeClass}">
+                                    <span class="skew-x-[10deg] inline-block">${item.tag}</span>
+                                </span>
+                                <span class="text-[10px] font-black text-neutral-500 uppercase tracking-widest bg-black px-2 py-0.5">${item.brand}</span>
+                            </div>
+                            <h3 class="text-white font-black text-lg uppercase tracking-tight truncate group-hover:text-orange-400 transition-colors">${item.name}</h3>
+                            <div class="flex items-center gap-4 text-xs mt-2 text-neutral-400 uppercase font-bold">
+                                <span class="flex items-center text-orange-500"><i data-lucide="zap" class="w-3 h-3 mr-1"></i> ${item.power} kWp</span>
+                                <span class="w-1 h-1 bg-neutral-600 rounded-full"></span>
+                                <span class="truncate max-w-[300px]">${item.description}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between sm:justify-end gap-6 sm:min-w-[300px] border-t sm:border-t-0 border-neutral-800 pt-3 sm:pt-0 mt-2 sm:mt-0">
+                            ${!state.isEditMode ? `
+                            <div class="text-right">
+                                <div class="text-[10px] font-bold text-neutral-500 line-through decoration-red-600">${formattedListPrice}</div>
+                                <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-400 tracking-tighter">${formatCurrency(item.price)}</div>
+                                <div class="text-[10px] font-black text-red-500 bg-red-500/10 px-1 inline-block">ECONOMIZE ${discount}%</div>
+                            </div>
+                            <button onclick='copyToClipboard(${JSON.stringify(item)})' class="p-3 bg-neutral-800 hover:bg-gradient-to-r hover:from-orange-600 hover:to-yellow-500 hover:text-black text-neutral-400 border border-neutral-700 hover:border-orange-400 transition-all shadow-lg active:translate-y-0.5">
+                                <i data-lucide="copy" class="w-5 h-5 stroke-[3px]"></i>
+                            </button>` : `
+                            <div class="flex gap-2">
+                                <button onclick='openModal(${JSON.stringify(item)})' class="px-4 py-2 bg-blue-900/30 border border-blue-900 hover:bg-blue-600 text-blue-400 hover:text-white font-bold uppercase text-xs transition-colors">EDITAR</button>
+                                <button onclick="deleteItem('${item.id}')" class="px-4 py-2 bg-red-900/30 border border-red-900 hover:bg-red-600 text-red-400 hover:text-white font-bold uppercase text-xs transition-colors">EXCLUIR</button>
+                            </div>`}
+                        </div>
+                    </div>
+                    `;
+      }
+    }).join('');
+
+    lucide.createIcons();
+  }
+
+  // --- ACTIONS ---
+
+  function setTab(tabId) {
+    state.activeTab = tabId;
+    renderTabs();
+    renderProducts();
+  }
+
+  function setViewMode(mode) {
+    state.viewMode = mode;
+    // Update buttons style
+    const btnGrid = document.getElementById('btn-grid');
+    const btnList = document.getElementById('btn-list');
+    if(mode === 'grid') {
+      btnGrid.className = 'p-3 transition-all bg-gradient-to-r from-orange-600 to-yellow-500 text-black';
+      btnList.className = 'p-3 transition-all text-neutral-600 hover:text-white';
+    } else {
+      btnList.className = 'p-3 transition-all bg-gradient-to-r from-orange-600 to-yellow-500 text-black';
+      btnGrid.className = 'p-3 transition-all text-neutral-600 hover:text-white';
+    }
+    renderProducts();
+  }
+
+  function toggleAdminMode() {
+    state.isEditMode = !state.isEditMode;
+    const btn = document.getElementById('admin-toggle-btn');
+    const adminBar = document.getElementById('admin-bar');
+
+    if(state.isEditMode) {
+      btn.className = 'p-3 border transition-all duration-300 bg-red-600 border-red-500 text-white animate-pulse';
+      adminBar.classList.remove('hidden');
+    } else {
+      btn.className = 'p-3 border transition-all duration-300 bg-black border-neutral-800 text-neutral-500 hover:text-white hover:border-white';
+      adminBar.classList.add('hidden');
+    }
+    renderProducts();
+  }
+
+  function copyToClipboard(item) {
+    const formattedPrice = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price);
+    const formattedList = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.listPrice);
+
+    const text = `⚠️ *MEGA FEIRÃO DA ÁGIL SOLAR* ⚠️\n\n☀️ *${item.name}*\n🚀 Potência: ${item.power} kWp\n🏭 Marca: ${item.brand}\n\n🔥 *DE: ~${formattedList}~*\n💰 *POR APENAS: ${formattedPrice}*\n\n⏳ _Condição exclusiva até as 21hrs (19/12/2025)._`;
+
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      showToast('OFERTA COPIADA! MANDE AGORA!');
+    } catch (err) {
+      console.error(err);
+    }
+    document.body.removeChild(textArea);
+  }
+
+  function deleteItem(id) {
+    if(confirm('TEM CERTEZA? ESSA AÇÃO NÃO PODE SER DESFEITA.')) {
+      state.data[state.activeTab] = state.data[state.activeTab].filter(i => i.id !== id);
+      saveToLocalStorage();
+      renderProducts();
+      showToast('ITEM REMOVIDO');
+    }
+  }
+
+  // --- MODAL ---
+  const modal = document.getElementById('modal-overlay');
+  const form = document.getElementById('product-form');
+
+  function openModal(item = null) {
+    modal.classList.remove('hidden');
+
+    if(item) {
+      // Edit
+      document.getElementById('modal-title').innerText = 'EDITAR OFERTA';
+      document.getElementById('form-id').value = item.id;
+      document.getElementById('form-name').value = item.name;
+      document.getElementById('form-brand').value = item.brand;
+      document.getElementById('form-power').value = item.power;
+      document.getElementById('form-price').value = item.price;
+      document.getElementById('form-listPrice').value = item.listPrice;
+      document.getElementById('form-type').value = item.type;
+      document.getElementById('form-tag').value = item.tag;
+    } else {
+      // New
+      document.getElementById('modal-title').innerText = 'NOVA OFERTA';
+      form.reset();
+      document.getElementById('form-id').value = '';
+      document.getElementById('form-type').value = 'Monofásico'; // Default
+      document.getElementById('form-tag').value = 'MAIS VENDIDO'; // Default
+    }
+  }
+
+  function closeModal() {
+    modal.classList.add('hidden');
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = document.getElementById('form-id').value;
+    const newItem = {
+      id: id || Date.now().toString(),
+      name: document.getElementById('form-name').value.toUpperCase(),
+      brand: document.getElementById('form-brand').value.toUpperCase(),
+      power: Number(document.getElementById('form-power').value),
+      price: Number(document.getElementById('form-price').value),
+      listPrice: Number(document.getElementById('form-listPrice').value),
+      type: document.getElementById('form-type').value,
+      tag: document.getElementById('form-tag').value,
+      // Simple description generator based on power/type to simplify form
+      description: document.getElementById('form-power').value + 'kWp - ' + document.getElementById('form-brand').value
+    };
+
+    const list = state.data[state.activeTab];
+
+    if(id) {
+      // Update
+      const index = list.findIndex(i => i.id === id);
+      if(index !== -1) list[index] = newItem;
+    } else {
+      // Add
+      list.push(newItem);
+    }
+
+    saveToLocalStorage();
+    closeModal();
+    renderProducts();
+    showToast('OFERTA SALVA COM SUCESSO');
+  });
+
+  // --- INIT ---
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    state.searchTerm = e.target.value;
+    renderProducts();
+  });
+
+  document.getElementById('admin-toggle-btn').addEventListener('click', toggleAdminMode);
+
+  // Start
+  initSplash();
+  renderTabs();
+  renderProducts();
+
+</script>
+</body>
+</html>
